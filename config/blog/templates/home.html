@@ -1,0 +1,54 @@
+{% extends "base.html" %} #상속: 맨 윗줄에 있어야 오류가 나지 않음
+{% load static %} #스태틱 파일들을 불러오기 위해서 작성하기
+
+{% block title %}
+Alex's Blog Home
+{% endblock title %}
+
+{% block extrahead %}
+<link rel="stylesheet" href="{% static 'style.css' %}">
+{% endblock extrahead %}
+
+{% block content %}
+
+<div class="head">
+    <h1>Alex's Blog</h1>
+    <img src="{% static 'hamster.jpg' %}" alt="Hamster Picture" width="100%" height="100%" class="logo">
+    <a href="{% url 'new' %}">새 글 작성하기</a>
+</div>
+<div class="post-lists">
+    {% for blog in page_obj %}
+    <div class="post-item">
+        <a href="{%url 'detail' blog.id%}">
+            <h2>{{blog.title}}</h2>
+            <p>{{blog.summary}}</p>
+            <p>{{blog.created_at}}</p>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+
+
+<span class="page-nav">
+    <div class="prev">
+        {% if page_obj.has_previous %}
+        <a href="?page=1">처음으로</a>
+        <a href="?page={{ page_obj.previous_page_number }}">이전</a>
+        {% endif %}
+    </div>
+
+    <div class="numbers">
+        <p>{{ page_obj.number }}</p>
+        <p> / </p>
+        <p>{{ page_obj.paginator.num_pages }}</p>
+    </div>
+
+    <div class="next">
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">다음</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">마지막으로</a>
+        {% endif %}
+    </div>
+</span>
+
+{% endblock content %}
